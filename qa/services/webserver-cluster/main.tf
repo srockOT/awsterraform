@@ -16,18 +16,14 @@ resource "aws_launch_configuration" "example" {
     image_id = "ami-2757f631"
     instance_type = "t2.micro"
     security_groups = [aws_security_group.instance.id]
-
-    user_data = <<-EOF
-                #!/bin/bash
-                echo "Hello, World" > index.html
-                nohup busybox httpd -f -p ${var.server_port} &
-                EOF
+    user_data       = data.template_file.user_data.rendered
 
     lifecycle {
         create_before_destroy = true 
     }
   
 }
+
 
 
 resource "aws_security_group" "instance" {
@@ -48,6 +44,17 @@ data "aws_vpc" "default" {
 data "aws_subnet_ids" "default" {
     vpc_id = data.aws_vpc.default.id
 }
+
+
+data "template_file" "user_data" {
+    template = file("user-data.sh")
+
+    vars = {
+        server_port = var.server_port
+        db_address = data.terraform_remote_state.db.outputs.address
+        db_port = data.terraform_remote_state.db.outputs.port
+     }
+ }
 
 resource "aws_autoscaling_group" "example" {
     launch_configuration = aws_launch_configuration.example.name 
@@ -145,3 +152,27 @@ resource "aws_lb_listener_rule" "asg" {
       target_group_arn = aws_lb_target_group.asg.arn 
     }   
 }
+
+terraform {
+    backend "s3" {
+        # Replace this with your bucket name
+        bucket              = "web-global-state"
+        key                 = "qa/service/webserver-cluster/terraform.tfstate"
+        region              = "us-east-1"
+
+        # Replace this with your DynamoDB table name!
+        dynamodb_table      = "web-global-locks"
+        encrypt             = true
+    }
+}
+
+data "terraform_remote_state" "db" {
+    backend = "s3"
+
+    config = {
+        bucket = "web-global-state"
+        key    = "qa/data-stores/mysql/terraform.tfstate"
+        region = "us-east-1"
+    }
+}
+
