@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 module "webserver_cluster" {
-    source = "../../../modules/services/webserver-cluster"
+    source = "../../../../modules/services/webserver-cluster"
 
     cluster_name              = var.cluster_name
     db_remote_state_bucket    = var.db_remote_state_bucket 
@@ -21,6 +21,11 @@ module "webserver_cluster" {
     instance_type = "t2.micro"
     min_size      = 2
     max_size      = 10
+
+    custom_tags = {
+      Owner       = "team-foo"
+      DeployedBy  = "terraform"
+    }
 }
 
 terraform {
