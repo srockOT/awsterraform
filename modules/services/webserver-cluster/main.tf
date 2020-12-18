@@ -51,8 +51,8 @@ resource "aws_autoscaling_group" "example" {
 
     # When replacing this ASG, create the replacment first, and only delete the original after
     #lifecyle {
-    #    create_before_destroy = true
-    #}
+     #   create_before_destroy = true
+   # }
 
     tag {
         key                 = "Name"
