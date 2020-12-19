@@ -12,6 +12,7 @@ resource "aws_db_instance" "example" {
 
     # How should we set the password
     password = "password"
+    skip_final_snapshot = true
 
 }
 

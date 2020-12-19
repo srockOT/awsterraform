@@ -25,7 +25,7 @@ terraform {
 }
 
 module "webserver_cluster" {
-    source = "../../../../modules/services/webserver-cluster"
+    source = "../../../../modules/services/hello-world-app"
 
     ami                       = "ami-2757f631"
     server_text               = "New server text"
