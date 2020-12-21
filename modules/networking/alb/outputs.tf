@@ -1,9 +1,9 @@
 output "alb_dns_name" {
-    value       = aws_lb.example.alb_dns_name
+    value       = aws_lb.example.dns_name
     description = "The domain name of the load balancer"
 }
 
-output "alb_htt_listenter_arn" {
+output "alb_http_listener_arn" {
     value       = aws_lb_listener.http.arn 
     description = "The ARN of the HTTP listener"
 }

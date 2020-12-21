@@ -2,20 +2,6 @@ provider "aws" {
     region = "us-east-1"
 }
 
-resource "aws_db_instance" "example" {
-    identifier_prefix = "web-database-prod"
-    engine            = "mysql"
-    allocated_storage = 10
-    instance_class    = "db.t2.micro"
-    name              = "example_database_prod"
-    username          = "admin"
-
-    # How should we set the password
-    password = "password"
-    skip_final_snapshot = true
-
-}
-
 terraform {
     backend "s3" {
         # Replace this with your bucket name
@@ -27,4 +13,11 @@ terraform {
         dynamodb_table      = "web-global-locks"
         encrypt             = true
     }
+}
+
+module "mysql" {
+    source = "../../../../modules/data-sources/mysql"
+    db_name = var.db_name
+    db_username = var.db_username
+    db_password = var.db_password
 }

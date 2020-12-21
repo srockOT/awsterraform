@@ -73,11 +73,11 @@ module "asg" {
     max_size        = var.max_size 
     enable_autoscaling = var.enable_autoscaling 
 
-    aws_subnet_ids  = data.aws_subnet_ids.default.ids 
+    subnet_ids  = data.aws_subnet_ids.default.ids 
     target_group_arns = [aws_lb_target_group.asg.arn]
     health_check_type = "ELB"
 
-    customer_tags     = var.custom_tags 
+    custom_tags     = var.custom_tags 
 }
 
 module "alb" {

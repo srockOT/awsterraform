@@ -10,8 +10,14 @@ variable "db_remote_state_key" {
     default = "qa/data-stores/mysql/terraform.tfstate"
 }
 
-variable "cluster_name" {
-    description = "The name to use to namespace all the resources in the cluster"
-    type = string
-    default = "webservers-qa"
+variable "server_text" {
+  description = "The text the web server should return"
+  default     = "Hello, World"
+  type        = string
+}
+
+variable "environment" {
+  description = "The name of the environment we're deploying to"
+  type        = string
+  default     = "qa"
 }
